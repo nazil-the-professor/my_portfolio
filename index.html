@@ -1,0 +1,950 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nazil Sheikh - Portfolio</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" xintegrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Poppins:wght@700;800;900&family=Dancing+Script:wght@400..700&display=swap" rel="stylesheet">
+    <style>
+        /* Custom CSS for gradient background animation and glassmorphism */
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #1a202c; /* Dark mode default */
+            color: #e2e8f0;
+            transition: background-color 0.3s ease, color 0.3s ease;
+            cursor: none; /* Hide default cursor */
+        }
+
+        /* Custom Cursor Styles (UPDATED) */
+        .cursor-dot {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 20px; /* Small inner purple dot */
+            height: 20px;
+            background-color: #8b5cf6; /* Solid purple */
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 10000; /* On top of the outline */
+            transform: translate(-50%, -50%); /* Center it */
+            transition: width 0.1s ease-out, height 0.1s ease-out;
+        }
+
+        .cursor-outline {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 40px; /* Larger hollow white circle */
+            height: 40px;
+            border: 2px solid rgba(255, 255, 255, 0.8); /* White hollow */
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 9999; /* Behind the dot */
+            transform: translate(-50%, -50%); /* Center it */
+            transition: width 0.2s ease-out, height 0.2s ease-out, border-color 0.2s ease-out; /* Add transition for size change on hover */
+        }
+
+        /* Hover effects for both */
+        .cursor-dot.hovered {
+            width: 20px; /* Dot slightly larger on hover */
+            height: 20px;
+        }
+        .cursor-outline.hovered {
+            width: 55px; /* Outline even larger on hover */
+            height: 55px;
+            border-color: rgba(255, 255, 255, 1); /* More solid white */
+        }
+
+        /* Glassmorphism effect */
+        .glassmorphism {
+            background: rgba(0, 0, 0, 0.2);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.5);
+        }
+
+        /* Custom scrollbar for better aesthetics */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #2d3748;
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #6b7280;
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #4a5568;
+        }
+
+        /* Custom styles for skill bars */
+        .skill-bar-inner {
+            height: 100%;
+            width: 0%; /* Initial width for animation */
+            background: linear-gradient(to right, #8b5cf6, #c084fc);
+            border-radius: 9999px;
+            transition: width 1s ease-out; /* Smooth transition for width */
+        }
+
+        /* Timeline dot animation */
+        .timeline-dot {
+            position: relative;
+            width: 1rem;
+            height: 1rem;
+            border-radius: 50%;
+            background-color: #8b5cf6; /* Primary color */
+            transition: background-color 0.3s ease;
+            z-index: 10;
+        }
+
+        /* Floating labels for contact form */
+        .form-group {
+            position: relative;
+            margin-bottom: 1.5rem;
+        }
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            border: 1px solid #4a5568;
+            border-radius: 0.5rem;
+            background-color: #2d3748;
+            color: #e2e8f0;
+            transition: all 0.3s ease;
+        }
+        .form-group label {
+            position: absolute;
+            top: 0.75rem;
+            left: 1rem;
+            color: #718096;
+            pointer-events: none;
+            transition: all 0.3s ease;
+            transform-origin: left top;
+        }
+        .form-group input:focus + label,
+        .form-group textarea:focus + label,
+        .form-group input:not(:placeholder-shown) + label,
+        .form-group textarea:not(:placeholder-shown) + label {
+            transform: translateY(-1.5rem) scale(0.8);
+            color: #8b5cf6;
+            background-color: inherit;
+            padding: 0 0.25rem;
+        }
+
+        /* Sticky header styles */
+        .header-sticky {
+            background-color: rgba(26, 32, 44, 0.9);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(5px);
+        }
+
+        /* Scroll-to-top button */
+        #scrollToTopBtn {
+            display: none; /* Hidden by default */
+            position: fixed; /* Fixed/sticky position */
+            bottom: 20px; /* Place the button at the bottom of the page */
+            right: 30px; /* Place the button 30px from the right */
+            z-index: 99; /* Make sure it does not overlap */
+            border: none; /* Remove borders */
+            outline: none; /* Remove outline */
+            background-color: #8b5cf6; /* Set a background color */
+            color: white; /* Text color */
+            cursor: pointer; /* Add a mouse pointer on hover */
+            padding: 15px; /* Some padding */
+            border-radius: 50%; /* Rounded corners */
+            font-size: 18px; /* Increase font size */
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            transition: opacity 0.3s ease, transform 0.3s ease;
+            opacity: 0; /* Initial opacity for fade-in */
+            transform: translateY(20px); /* Initial position for slide-up */
+        }
+        #scrollToTopBtn.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        #scrollToTopBtn:hover {
+            background-color: #a78bfa;
+            transform: translateY(-2px);
+        }
+
+        /* Micro-interactions: button hover effects */
+        .btn-primary {
+            transition: all 0.3s ease;
+            transform: scale(1);
+        }
+        .btn-primary:hover {
+            transform: scale(1.05);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Project card hover effect */
+        .project-card {
+            transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+        }
+        .project-card:hover {
+            transform: scale(1.05) rotate(1deg); /* Increased scale for more noticeable zoom */
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Profile image hover effect */
+        .profile-image-container img {
+            transition: transform 0.3s ease-in-out;
+        }
+        .profile-image-container:hover img {
+            transform: scale(1.05) rotate(2deg);
+        }
+
+        /* Stylish font for name */
+        .font-dancing {
+            font-family: 'Dancing Script', cursive;
+        }
+
+        /* Animated Circles Styles */
+        .animated-circle {
+            position: absolute;
+            border-radius: 50%;
+            opacity: 0.6;
+            animation: pulse 4s infinite alternate; /* Optional: subtle pulsing */
+            z-index: -1; /* Ensure circles are behind content */
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            100% { transform: scale(1.05); }
+        }
+
+        /* Container for animated circles to cover the whole page */
+        #animated-circles-container {
+            position: absolute; /* Changed to absolute to scroll with content */
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%; /* Will be dynamically adjusted by JS */
+            overflow: hidden;
+            z-index: -2; /* Ensure it's behind everything else */
+        }
+
+        /* Transparent backgrounds for sections */
+        .section-transparent-bg-1 { /* For sections previously bg-gray-800 */
+            background-color: rgba(45, 55, 72, 0.6); /* Semi-transparent gray-800 */
+            backdrop-filter: blur(3px); /* Optional subtle blur for content sections */
+        }
+        .section-transparent-bg-2 { /* For sections previously bg-gray-900 */
+            background-color: rgba(26, 32, 44, 0.6); /* Semi-transparent gray-900 */
+            backdrop-filter: blur(3px); /* Optional subtle blur for content sections */
+        }
+    </style>
+</head>
+<body class="bg-gray-900 text-gray-200">
+
+    <div id="animated-circles-container"></div>
+
+    <div class="cursor-dot"></div>
+    <div class="cursor-outline"></div>
+
+    <header id="main-header" class="fixed top-0 left-0 w-full z-50 py-4 transition-all duration-300">
+        <nav class="container mx-auto flex justify-between items-center px-6 md:px-12">
+            <a href="#hero" class="text-2xl font-bold text-purple-400 hover:text-purple-500 transition-colors duration-300 font-dancing">Nazil Sheikh</a>
+
+            <ul class="hidden md:flex space-x-8">
+                <li><a href="#about" class="nav-link text-lg font-medium hover:text-purple-400 transition-colors duration-300">About</a></li>
+                <li><a href="#skills" class="nav-link text-lg font-medium hover:text-purple-400 transition-colors duration-300">Skills</a></li>
+                <li><a href="#projects" class="nav-link text-lg font-medium hover:text-purple-400 transition-colors duration-300">Projects</a></li>
+                <li><a href="#experience" class="nav-link text-lg font-medium hover:text-purple-400 transition-colors duration-300">Experience</a></li>
+                <li><a href="#contact" class="nav-link text-lg font-medium hover:text-purple-400 transition-colors duration-300">Contact</a></li>
+            </ul>
+
+            <div class="flex items-center md:hidden">
+                <button id="mobile-menu-button" class="text-gray-200 focus:outline-none">
+                    <i class="fas fa-bars text-2xl"></i>
+                </button>
+            </div>
+
+            </nav>
+
+        <div id="mobile-menu" class="fixed inset-0 bg-gray-900 bg-opacity-95 z-40 hidden flex flex-col items-center justify-center space-y-8 text-white text-2xl transform -translate-x-full transition-transform duration-300 ease-in-out">
+            <button id="close-mobile-menu" class="absolute top-6 right-6 text-white text-3xl focus:outline-none">
+                <i class="fas fa-times"></i>
+            </button>
+            <a href="#about" class="mobile-nav-link hover:text-indigo-400 transition-colors duration-300">About</a>
+            <a href="#skills" class="mobile-nav-link hover:text-indigo-400 transition-colors duration-300">Skills</a>
+            <a href="#projects" class="mobile-nav-link hover:text-indigo-400 transition-colors duration-300">Projects</a>
+            <a href="#experience" class="mobile-nav-link hover:text-indigo-400 transition-colors duration-300">Experience</a>
+            <a href="#contact" class="mobile-nav-link hover:text-indigo-400 transition-colors duration-300">Contact</a>
+        </div>
+    </header>
+
+    <main>
+        <section id="hero" class="relative h-screen flex items-center justify-center text-center overflow-hidden">
+            <div class="relative z-10 p-8 rounded-xl glassmorphism mx-4 md:mx-auto max-w-3xl">
+                <h1 id="hero-name" class="text-5xl md:text-6xl font-extrabold text-white mb-4 opacity-0 transform translate-y-10 font-dancing">
+                    Hi, I'm <span class="text-purple-300">Nazil Sheikh</span>
+                </h1>
+                <p id="hero-designation" class="text-xl md:text-3xl text-gray-200 mb-6 opacity-0 transform translate-y-10">
+                    An <span class="font-semibold">AI & Data Science Engineer</span>
+                </p>
+                <p id="hero-tagline" class="text-lg md:text-xl text-gray-300 opacity-0"></p>
+                <div class="mt-8 flex justify-center space-x-4">
+                    <a href="#projects" class="btn-primary bg-purple-600 text-white px-6 py-3 rounded-full text-lg font-semibold hover:bg-purple-700 transition-all duration-300 shadow-lg">View Projects</a>
+                    <a href="#contact" class="btn-primary bg-transparent border-2 border-white text-white px-6 py-3 rounded-full text-lg font-semibold hover:bg-white hover:text-purple-600 transition-all duration-300 shadow-lg">Contact Me</a>
+                </div>
+            </div>
+        </section>
+
+        <section id="about" class="py-16 md:py-24 section-transparent-bg-1 transition-colors duration-300">
+            <div class="container mx-auto px-6 md:px-12 flex flex-col md:flex-row items-center gap-12">
+                <div class="md:w-1/3 flex justify-center about-image-container">
+                    <div class="profile-image-container w-64 h-64 md:w-80 md:h-80 rounded-full overflow-hidden shadow-2xl border-4 border-purple-400 transform transition-all duration-300 hover:scale-105 hover:rotate-2">
+                        <img src="images/profile.jpg" alt="Your Profile Picture" class="w-full h-full object-cover" onerror="this.onerror=null;this.src='https://placehold.co/320x320/a8c0ff/3f2b96?text=Error';">
+                    </div>
+                </div>
+                <div class="md:w-2/3 text-center md:text-left about-content">
+                    <h2 class="text-4xl font-bold text-purple-300 mb-6 section-heading">About Me</h2>
+                    <div id="about-bio-container">
+                        <p id="original-bio" class="text-lg leading-relaxed mb-4">
+                            Hello! I'm <span class="font-semibold text-purple-400">Nazil Sheikh</span>, an aspiring <span class="font-semibold">Data Scientist and Machine Learning Engineer</span> from Bhopal, Madhya Pradesh. I am currently pursuing my Bachelor of Technology in Artificial Intelligence & Data Science at Sagar Institute of Science & Technology (2022-2025). My objective is to secure a challenging position in the field of Data Science where I can leverage my skills in data analysis, machine learning, and Python to contribute to the company's success. I am dedicated to continuous learning and staying current with industry trends to excel in this fast-paced journey.
+                        </p>
+                        <p class="text-lg leading-relaxed">
+                            My expertise lies in building intelligent systems, from predictive models to image processing solutions. I'm passionate about transforming data into actionable insights and creating impactful applications. I'm always eager to connect with like-minded individuals and collaborate on exciting projects that push the boundaries of AI and Data Science.
+                        </p>
+                    </div>
+                    </div>
+            </div>
+        </section>
+
+        <section id="skills" class="py-16 md:py-24 section-transparent-bg-2 transition-colors duration-300">
+            <div class="container mx-auto px-6 md:px-12">
+                <h2 class="text-4xl font-bold text-center text-purple-300 mb-12 section-heading">My Skills</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    <div class="skill-item bg-gray-800 p-6 rounded-lg shadow-md hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 glassmorphism">
+                        <h3 class="text-xl font-semibold mb-3 text-purple-400">Python</h3>
+                        <div class="w-full bg-gray-700 rounded-full h-2.5">
+                            <div class="skill-bar-inner" data-progress="90"></div>
+                        </div>
+                        <p class="text-sm text-right text-gray-400 mt-1">90%</p>
+                    </div>
+                    <div class="skill-item bg-gray-800 p-6 rounded-lg shadow-md hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 glassmorphism">
+                        <h3 class="text-xl font-semibold mb-3 text-purple-400">Machine Learning</h3>
+                        <div class="w-full bg-gray-700 rounded-full h-2.5">
+                            <div class="skill-bar-inner" data-progress="85"></div>
+                        </div>
+                        <p class="text-sm text-right text-gray-400 mt-1">85%</p>
+                    </div>
+                    <div class="skill-item bg-gray-800 p-6 rounded-lg shadow-md hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 glassmorphism">
+                        <h3 class="text-xl font-semibold mb-3 text-purple-400">Data Analytics</h3>
+                        <div class="w-full bg-gray-700 rounded-full h-2.5">
+                            <div class="skill-bar-inner" data-progress="88"></div>
+                        </div>
+                        <p class="text-sm text-right text-gray-400 mt-1">88%</p>
+                    </div>
+                    <div class="skill-item bg-gray-800 p-6 rounded-lg shadow-md hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 glassmorphism">
+                        <h3 class="text-xl font-semibold mb-3 text-purple-400">AWS</h3>
+                        <div class="w-full bg-gray-700 rounded-full h-2.5">
+                            <div class="skill-bar-inner" data-progress="80"></div>
+                        </div>
+                        <p class="text-sm text-right text-gray-400 mt-1">80%</p>
+                    </div>
+                    <div class="skill-item bg-gray-800 p-6 rounded-lg shadow-md hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 glassmorphism">
+                        <h3 class="text-xl font-semibold mb-3 text-purple-400">Django</h3>
+                        <div class="w-full bg-gray-700 rounded-full h-2.5">
+                            <div class="skill-bar-inner" data-progress="75"></div>
+                        </div>
+                        <p class="text-sm text-right text-gray-400 mt-1">75%</p>
+                    </div>
+                    <div class="skill-item bg-gray-800 p-6 rounded-lg shadow-md hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 glassmorphism">
+                        <h3 class="text-xl font-semibold mb-3 text-purple-400">Git & GitHub</h3>
+                        <div class="w-full bg-gray-700 rounded-full h-2.5">
+                            <div class="skill-bar-inner" data-progress="88"></div>
+                        </div>
+                        <p class="text-sm text-right text-gray-400 mt-1">88%</p>
+                    </div>
+                    <div class="skill-item bg-gray-800 p-6 rounded-lg shadow-md hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 glassmorphism">
+                        <h3 class="text-xl font-semibold mb-3 text-purple-400">SQL</h3>
+                        <div class="w-full bg-gray-700 rounded-full h-2.5">
+                            <div class="skill-bar-inner" data-progress="82"></div>
+                        </div>
+                        <p class="text-sm text-right text-gray-400 mt-1">82%</p>
+                    </div>
+                    <div class="skill-item bg-gray-800 p-6 rounded-lg shadow-md hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 glassmorphism">
+                        <h3 class="text-xl font-semibold mb-3 text-purple-400">Docker</h3>
+                        <div class="w-full bg-gray-700 rounded-full h-2.5">
+                            <div class="skill-bar-inner" data-progress="70"></div>
+                        </div>
+                        <p class="text-sm text-right text-gray-400 mt-1">70%</p>
+                    </div>
+                    <div class="skill-item bg-gray-800 p-6 rounded-lg shadow-md hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 glassmorphism">
+                        <h3 class="text-xl font-semibold mb-3 text-purple-400">Linux</h3>
+                        <div class="w-full bg-gray-700 rounded-full h-2.5">
+                            <div class="skill-bar-inner" data-progress="78"></div>
+                        </div>
+                        <p class="text-sm text-right text-gray-400 mt-1">78%</p>
+                    </div>
+                    <div class="skill-item bg-gray-800 p-6 rounded-lg shadow-md hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 glassmorphism">
+                        <h3 class="text-xl font-semibold mb-3 text-purple-400">Deep Learning</h3>
+                        <div class="w-full bg-gray-700 rounded-full h-2.5">
+                            <div class="skill-bar-inner" data-progress="88"></div>
+                        </div>
+                        <p class="text-sm text-right text-gray-400 mt-1">88%</p>
+                    </div>
+                    <div class="skill-item bg-gray-800 p-6 rounded-lg shadow-md hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 glassmorphism">
+                        <h3 class="text-xl font-semibold mb-3 text-purple-400">Computer Vision</h3>
+                        <div class="w-full bg-gray-700 rounded-full h-2.5">
+                            <div class="skill-bar-inner" data-progress="85"></div>
+                        </div>
+                        <p class="text-sm text-right text-gray-400 mt-1">85%</p>
+                    </div>
+                    <div class="skill-item bg-gray-800 p-6 rounded-lg shadow-md hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 glassmorphism">
+                        <h3 class="text-xl font-semibold mb-3 text-purple-400">Natural Language Processing</h3>
+                        <div class="w-full bg-gray-700 rounded-full h-2.5">
+                            <div class="skill-bar-inner" data-progress="70"></div>
+                        </div>
+                        <p class="text-sm text-right text-gray-400 mt-1">70%</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="projects" class="py-16 md:py-24 section-transparent-bg-1 transition-colors duration-300">
+            <div class="container mx-auto px-6 md:px-12">
+                <h2 class="text-4xl font-bold text-center text-purple-300 mb-12 section-heading">My Projects</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    <div class="project-card relative rounded-lg overflow-hidden shadow-lg glassmorphism group transform transition-all duration-300 hover:scale-[1.05] hover:rotate-1">
+                        <img src="https://placehold.co/600x400/3f2b96/a8c0ff?text=Diabetes+Prediction" alt="Diabetes Prediction System" class="w-full h-64 object-cover">
+                        <div class="p-6">
+                            <h3 class="text-2xl font-semibold mb-2 text-purple-400">Diabetes Prediction System</h3>
+                            <p class="project-description text-gray-300 mb-4">This is my first Machine Learning project, which predicts whether a person is going to have diabetes or not. The system is deployed live on AWS.</p>
+                            <div class="flex flex-wrap gap-2 justify-between items-center">
+                                <div class="flex space-x-4">
+                                    <a href="https://github.com/nazil-the-professor/Diabetes_Prediction_system.git" target="_blank" class="text-purple-300 hover:text-purple-500 transition-colors duration-300"><i class="fab fa-github mr-2"></i>GitHub Repo</a>
+                                    <a href="#" target="_blank" class="text-purple-300 hover:text-purple-500 transition-colors duration-300"><i class="fas fa-external-link-alt mr-2"></i>Live Demo</a>
+                                </div>
+                                </div>
+                        </div>
+                        </div>
+
+                    <div class="project-card relative rounded-lg overflow-hidden shadow-lg glassmorphism group transform transition-all duration-300 hover:scale-[1.05] hover:rotate-1">
+                        <img src="https://placehold.co/600x400/a8c0ff/3f2b96?text=Hair+Analysis+Tool" alt="Hair Analysis Tool" class="w-full h-64 object-cover">
+                        <div class="p-6">
+                            <h3 class="text-2xl font-semibold mb-2 text-purple-400">Hair Analysis Tool</h3>
+                            <p class="project-description text-gray-300 mb-4">Analyzing trichoscope images using annotated data and a YOLO pre-trained model to accurately detect and segment hair strands.</p>
+                            <div class="flex flex-wrap gap-2 justify-between items-center">
+                                <div class="flex space-x-4">
+                                    <a href="https://github.com/nazil-the-professor/Hair-Analysis-Tool" target="_blank" class="text-purple-300 hover:text-purple-500 transition-colors duration-300"><i class="fab fa-github mr-2"></i>GitHub Repo</a>
+                                    </div>
+                                </div>
+                        </div>
+                        </div>
+
+                    <div class="project-card relative rounded-lg overflow-hidden shadow-lg glassmorphism group transform transition-all duration-300 hover:scale-[1.05] hover:rotate-1">
+                        <img src="https://placehold.co/600x400/3f2b96/a8c0ff?text=Price+Comparator" alt="Price Comparator" class="w-full h-64 object-cover">
+                        <div class="p-6">
+                            <h3 class="text-2xl font-semibold mb-2 text-purple-400">E-commerce Price Comparator</h3>
+                            <p class="project-description text-gray-300 mb-4">A Django-based web application that allows users to compare prices of products across multiple e-commerce platforms, helping them find the best deals effortlessly.</p>
+                            <div class="flex flex-wrap gap-2 justify-between items-center">
+                                <div class="flex space-x-4">
+                                    <a href="https://github.com/nazil-the-professor/Price_comparitor_of_E-commerce_websites.git" target="_blank" class="text-purple-300 hover:text-purple-500 transition-colors duration-300"><i class="fab fa-github mr-2"></i>GitHub Repo</a>
+                                    </div>
+                                </div>
+                        </div>
+                        </div>
+
+                    <div class="project-card relative rounded-lg overflow-hidden shadow-lg glassmorphism group transform transition-all duration-300 hover:scale-[1.05] hover:rotate-1">
+                        <img src="https://placehold.co/600x400/3f2b96/a8c0ff?text=Drowsiness+Detection" alt="Driver Drowsiness Detection System" class="w-full h-64 object-cover">
+                        <div class="p-6">
+                            <h3 class="text-2xl font-semibold mb-2 text-purple-400">Driver Drowsiness Detection System</h3>
+                            <p class="project-description text-gray-300 mb-4">This project is a driver drowsiness detection system that aims to prevent accidents caused by drowsy driving. It detects drowsiness in real-time by analyzing the driver's facial features and behavior using computer vision techniques.</p>
+                            <div class="flex flex-wrap gap-2 justify-between items-center">
+                                <div class="flex space-x-4">
+                                    <a href="https://github.com/nazil-the-professor/Driver_Drowsiness_detection_system.git" target="_blank" class="text-purple-300 hover:text-purple-500 transition-colors duration-300"><i class="fab fa-github mr-2"></i>GitHub Repo</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="project-card relative rounded-lg overflow-hidden shadow-lg glassmorphism group transform transition-all duration-300 hover:scale-[1.05] hover:rotate-1">
+                        <img src="https://placehold.co/600x400/a8c0ff/3f2b96?text=Library+Management" alt="Library Management System" class="w-full h-64 object-cover">
+                        <div class="p-6">
+                            <h3 class="text-2xl font-semibold mb-2 text-purple-400">Library Management System (Django)</h3>
+                            <p class="project-description text-gray-300 mb-4">This project is a web-based Library Management System developed using Django, a high-level Python web framework. The system allows librarians to manage books, members, borrowings, and returns efficiently.</p>
+                            <div class="flex flex-wrap gap-2 justify-between items-center">
+                                <div class="flex space-x-4">
+                                    <a href="https://github.com/nazil-the-professor/Liabrary-Management-System-using-Django-.git" target="_blank" class="text-purple-300 hover:text-purple-500 transition-colors duration-300"><i class="fab fa-github mr-2"></i>GitHub Repo</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="project-card relative rounded-lg overflow-hidden shadow-lg glassmorphism group transform transition-all duration-300 hover:scale-[1.05] hover:rotate-1">
+                        <img src="https://placehold.co/600x400/3f2b96/a8c0ff?text=Sentiment+Analysis" alt="Sentiment Analysis" class="w-full h-64 object-cover">
+                        <div class="p-6">
+                            <h3 class="text-2xl font-semibold mb-2 text-purple-400">Sentiment Analysis (BERT Model)</h3>
+                            <p class="project-description text-gray-300 mb-4">This is my first sentiment analysis project, where I used a BERT Model and fine-tuned it for sentiment classification.</p>
+                            <div class="flex flex-wrap gap-2 justify-between items-center">
+                                <div class="flex space-x-4">
+                                    <a href="https://github.com/nazil-the-professor/Sentiment-Analysis-Using-BERT-Model.git" target="_blank" class="text-purple-300 hover:text-purple-500 transition-colors duration-300"><i class="fab fa-github mr-2"></i>GitHub Repo</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="experience" class="py-16 md:py-24 section-transparent-bg-2 transition-colors duration-300">
+            <div class="container mx-auto px-6 md:px-12">
+                <h2 class="text-4xl font-bold text-center text-purple-300 mb-12 section-heading">Experience & Education</h2>
+                <div class="relative wrap overflow-hidden p-10 h-full">
+                    <div class="border-2-2 absolute border-opacity-20 border-gray-300 h-full border" style="left: 50%;"></div>
+                    <div class="mb-8 flex justify-between items-center w-full right-timeline">
+                        <div class="order-1 w-5/12"></div>
+                        <div class="z-10 flex items-center order-1 shadow-xl w-8 h-8 rounded-full bg-purple-500 timeline-dot">
+                            <h1 class="mx-auto font-semibold text-lg text-white">1</h1>
+                        </div>
+                        <div class="order-1 bg-gray-800 rounded-lg shadow-xl w-5/12 px-6 py-4 glassmorphism timeline-item">
+                            <h3 class="mb-3 font-bold text-purple-400 text-xl">Junior Developer Intern</h3>
+                            <p class="text-sm leading-snug tracking-wide text-gray-300">Skyline Meridian | Duration: 6 months</p>
+                            <ul class="list-disc list-inside text-gray-300 mt-2 text-sm">
+                                <li>Worked on projects involving Image Processing, Machine Learning, and Deep Learning.</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="mb-8 flex justify-between flex-row-reverse items-center w-full left-timeline">
+                        <div class="order-1 w-5/12"></div>
+                        <div class="z-10 flex items-center order-1 shadow-xl w-8 h-8 rounded-full bg-purple-500 timeline-dot">
+                            <h1 class="mx-auto font-semibold text-lg text-white">2</h1>
+                        </div>
+                        <div class="order-1 bg-gray-800 rounded-lg shadow-xl w-5/12 px-6 py-4 glassmorphism timeline-item">
+                            <h3 class="mb-3 font-bold text-purple-400 text-xl">B.Tech (AI & DS)</h3>
+                            <p class="text-sm leading-snug tracking-wide text-gray-300">Sagar Institute of Science & Technology | 2022-2025</p>
+                            <ul class="list-disc list-inside text-gray-300 mt-2 text-sm">
+                                <li>CGPA: 7.63</li>
+                                <li>Specialization: Artificial Intelligence & Data Science</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="mb-8 flex justify-between items-center w-full right-timeline">
+                        <div class="order-1 w-5/12"></div>
+                        <div class="z-10 flex items-center order-1 shadow-xl w-8 h-8 rounded-full bg-purple-500 timeline-dot">
+                            <h1 class="mx-auto font-semibold text-lg text-white">3</h1>
+                        </div>
+                        <div class="order-1 bg-gray-800 rounded-lg shadow-xl w-5/12 px-6 py-4 glassmorphism timeline-item">
+                            <h3 class="mb-3 font-bold text-purple-400 text-xl">Deep Learning Certification</h3>
+                            <p class="text-sm leading-snug tracking-wide text-gray-300">IIT Kharagpur | Jan-Apr, 2024 (Grade: 60%)</p>
+                        </div>
+                    </div>
+
+                    <div class="mb-8 flex justify-between flex-row-reverse items-center w-full left-timeline">
+                        <div class="order-1 w-5/12"></div>
+                        <div class="z-10 flex items-center order-1 shadow-xl w-8 h-8 rounded-full bg-purple-500 timeline-dot">
+                            <h1 class="mx-auto font-semibold text-lg text-white">4</h1>
+                        </div>
+                        <div class="order-1 bg-gray-800 rounded-lg shadow-xl w-5/12 px-6 py-4 glassmorphism timeline-item">
+                            <h3 class="mb-3 font-bold text-purple-400 text-xl">Python for Data Science, AI and Development</h3>
+                            <p class="text-sm leading-snug tracking-wide text-gray-300">IBM x Coursera | June 11, 2023 (Grade: 88.80%)</p>
+                        </div>
+                    </div>
+
+                    <div class="mb-8 flex justify-between items-center w-full right-timeline">
+                        <div class="order-1 w-5/12"></div>
+                        <div class="z-10 flex items-center order-1 shadow-xl w-8 h-8 rounded-full bg-purple-500 timeline-dot">
+                            <h1 class="mx-auto font-semibold text-lg text-white">5</h1>
+                        </div>
+                        <div class="order-1 bg-gray-800 rounded-lg shadow-xl w-5/12 px-6 py-4 glassmorphism timeline-item">
+                            <h3 class="mb-3 font-bold text-purple-400 text-xl">AWS Cloud Technical Essentials</h3>
+                            <p class="text-sm leading-snug tracking-wide text-gray-300">August 27, 2023 (Grade: 94.92%)</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="contact" class="py-16 md:py-24 section-transparent-bg-2 transition-colors duration-300">
+            <div class="container mx-auto px-6 md:px-12">
+                <h2 class="text-4xl font-bold text-center text-purple-300 mb-12 section-heading">Get In Touch</h2>
+                <div class="max-w-xl mx-auto bg-gray-800 p-8 rounded-lg shadow-xl glassmorphism">
+                    <form id="contactForm" class="space-y-6">
+                        <div class="form-group">
+                            <input type="text" id="name" name="name" placeholder=" " class="focus:border-purple-500">
+                            <label for="name">Your Name</label>
+                        </div>
+                        <div class="form-group">
+                            <input type="email" id="email" name="email" placeholder=" " class="focus:border-purple-500">
+                            <label for="email">Your Email</label>
+                        </div>
+                        <div class="form-group">
+                            <input type="text" id="subject" name="subject" placeholder=" " class="focus:border-purple-500">
+                            <label for="subject">Subject</label>
+                        </div>
+                        <div class="form-group">
+                            <textarea id="message" name="message" rows="5" placeholder=" " class="focus:border-purple-500"></textarea>
+                            <label for="message">Your Message</label>
+                        </div>
+                        <button type="submit" class="btn-primary w-full bg-purple-600 text-white py-3 rounded-lg text-lg font-semibold hover:bg-purple-700 transition-all duration-300 shadow-md">Send Message</button>
+                    </form>
+                    <div id="form-message" class="mt-4 text-center text-green-400 hidden"></div>
+
+                    <div class="mt-8 text-center">
+                        <h3 class="text-xl font-semibold mb-4 text-purple-400">Find Me On</h3>
+                        <div class="flex justify-center space-x-6">
+                            <a href="https://github.com/nazil-the-professor" target="_blank" class="text-gray-300 hover:text-purple-400 transition-colors duration-300 text-3xl" aria-label="GitHub"><i class="fab fa-github"></i></a>
+                            <a href="https://linkedin.com/in/nazil-sheikh" target="_blank" class="text-gray-300 hover:text-purple-400 transition-colors duration-300 text-3xl" aria-label="LinkedIn"><i class="fab fa-linkedin"></i></a>
+                            <a href="https://www.hackerrank.com/profile/nazilsheikhemer1" target="_blank" class="text-gray-300 hover:text-purple-400 transition-colors duration-300 text-3xl" aria-label="HackerRank"><i class="fas fa-code"></i></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="bg-gray-950 text-white py-8 text-center">
+        <div class="container mx-auto px-6 md:px-12">
+            <p>&copy; <span id="current-year"></span> Nazil Sheikh. All rights reserved.</p>
+            <p class="mt-2 text-sm">Designed and Developed with ❤️</p>
+        </div>
+    </footer>
+
+    <button id="scrollToTopBtn" aria-label="Scroll to top">
+        <i class="fas fa-arrow-up"></i>
+    </button>
+
+    <script>
+        // GSAP Register ScrollTrigger plugin
+        gsap.registerPlugin(ScrollTrigger);
+
+        // --- Custom Cursor Logic (UPDATED) ---
+        const cursorDot = document.querySelector('.cursor-dot');
+        const cursorOutline = document.querySelector('.cursor-outline');
+        const interactiveElements = document.querySelectorAll('a, button, input, textarea, .project-card, .skill-item'); // Add more elements if needed
+
+        document.addEventListener('mousemove', (e) => {
+            // Animate the inner dot quickly
+            gsap.to(cursorDot, {
+                x: e.clientX,
+                y: e.clientY,
+                duration: 0.1, // Quick follow
+                ease: "power2.out"
+            });
+            // Animate the outer outline with a slight delay/slower speed for trailing effect
+            gsap.to(cursorOutline, {
+                x: e.clientX,
+                y: e.clientY,
+                duration: 0.3, // Slower follow for trailing effect
+                ease: "power2.out"
+            });
+        });
+
+        interactiveElements.forEach(element => {
+            element.addEventListener('mouseenter', () => {
+                cursorDot.classList.add('hovered');
+                cursorOutline.classList.add('hovered');
+            });
+            element.addEventListener('mouseleave', () => {
+                cursorDot.classList.remove('hovered');
+                cursorOutline.classList.remove('hovered');
+            });
+        });
+
+        // --- Header Sticky & Scroll-to-top ---
+        const mainHeader = document.getElementById('main-header');
+        const scrollToTopBtn = document.getElementById('scrollToTopBtn');
+
+        window.addEventListener('scroll', () => {
+            // Sticky Header
+            if (window.scrollY > 50) {
+                mainHeader.classList.add('header-sticky');
+            } else {
+                mainHeader.classList.remove('header-sticky');
+            }
+
+            // Scroll-to-top button visibility
+            if (window.scrollY > 300) {
+                scrollToTopBtn.classList.add('show');
+            } else {
+                scrollToTopBtn.classList.remove('show');
+            }
+        });
+
+        scrollToTopBtn.addEventListener('click', () => {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        });
+
+        // --- Mobile Menu Toggle ---
+        const mobileMenuButton = document.getElementById('mobile-menu-button');
+        const closeMobileMenuButton = document.getElementById('close-mobile-menu');
+        const mobileMenu = document.getElementById('mobile-menu');
+        const mobileNavLinks = document.querySelectorAll('.mobile-nav-link');
+
+        mobileMenuButton.addEventListener('click', () => {
+            mobileMenu.classList.remove('hidden');
+            gsap.to(mobileMenu, { x: 0, duration: 0.3, ease: "power2.out" });
+        });
+
+        closeMobileMenuButton.addEventListener('click', () => {
+            gsap.to(mobileMenu, { x: '100%', duration: 0.3, ease: "power2.in", onComplete: () => {
+                mobileMenu.classList.add('hidden');
+            }});
+        });
+
+        mobileNavLinks.forEach(link => {
+            link.addEventListener('click', () => {
+                gsap.to(mobileMenu, { x: '100%', duration: 0.3, ease: "power2.in", onComplete: () => {
+                    mobileMenu.classList.add('hidden');
+                }});
+            });
+        });
+
+
+        // --- GSAP Animations ---
+
+        // 1. Hero Section Animations
+        const heroContainer = document.querySelector('#hero .glassmorphism'); // Select the main container
+        const heroTimeline = gsap.timeline({ defaults: { ease: "power3.out" } });
+
+        heroTimeline
+            .from(heroContainer, { opacity: 0, scale: 0.9, duration: 1, delay: 0.3 }) // Animate the container itself
+            .from("#hero-name", { opacity: 0, y: 50, duration: 1 }, "-=0.5")
+            .from("#hero-designation", { opacity: 0, y: 50, duration: 1 }, "-=0.7")
+            // Explicitly animate tagline to full opacity before starting typewriter effect
+            .to("#hero-tagline", { opacity: 1, duration: 0.5 }, "-=0.5")
+            .call(typeTagline, [], "-=0.2"); // Call typeTagline after opacity is 1
+
+        // Typewriter effect for tagline (now a full introduction)
+        const taglineText = "Hi, I'm Nazil Sheikh from Bhopal, Madhya Pradesh — a passionate engineer driven by curiosity and a love for solving real-world challenges using Artificial Intelligence and Data Science. I hold a B.Tech in Computer Science Engineering with a specialization in AI & DS. From building intelligent systems to exploring how data can transform decisions, my journey is rooted in one goal: turning innovation into impact.";
+        const taglineElement = document.getElementById('hero-tagline');
+        let charIndex = 0;
+
+        function typeTagline() {
+            // Clear existing text if any before typing
+            if (charIndex === 0) {
+                taglineElement.textContent = '';
+            }
+            if (charIndex < taglineText.length) {
+                taglineElement.textContent += taglineText.charAt(charIndex);
+                charIndex++;
+                setTimeout(typeTagline, 15); // Typing speed
+            }
+        }
+
+
+        // 2. About Me Section Animations (ScrollTrigger)
+        gsap.from(".about-image-container", {
+            opacity: 0,
+            x: -100,
+            duration: 1.2,
+            ease: "power2.out",
+            scrollTrigger: {
+                trigger: "#about",
+                start: "top 75%", // When top of section hits 75% of viewport
+                toggleActions: "play none none none"
+            }
+        });
+        gsap.from(".about-content", {
+            opacity: 0,
+            x: 100,
+            duration: 1.2,
+            ease: "power2.out",
+            scrollTrigger: {
+                trigger: "#about",
+                start: "top 75%",
+                toggleActions: "play none none none"
+            }
+        });
+
+
+        // 3. Skills Section Animations (ScrollTrigger)
+        document.querySelectorAll('.skill-item').forEach((item, index) => {
+            gsap.from(item, {
+                opacity: 0,
+                y: 50,
+                duration: 0.8,
+                ease: "power2.out",
+                delay: index * 0.1, // Stagger animation
+                scrollTrigger: {
+                    trigger: item,
+                    start: "top 85%",
+                    toggleActions: "play none none none",
+                    onEnter: () => {
+                        // Animate skill bar width
+                        const progressBar = item.querySelector('.skill-bar-inner');
+                        const progress = progressBar.dataset.progress;
+                        progressBar.style.width = progress + '%';
+                    }
+                }
+            });
+        });
+
+
+        // 4. Projects Section Animations (ScrollTrigger)
+        document.querySelectorAll('.project-card').forEach((card, index) => {
+            gsap.from(card, {
+                opacity: 0,
+                y: 100,
+                scale: 0.9,
+                duration: 1,
+                ease: "back.out(1.7)",
+                delay: index * 0.15,
+                scrollTrigger: {
+                    trigger: card,
+                    start: "top 80%",
+                    toggleActions: "play none none none"
+                }
+            });
+        });
+
+        // 5. Experience & Education Timeline Animations (ScrollTrigger)
+        document.querySelectorAll('.timeline-item').forEach((item, index) => {
+            gsap.from(item, {
+                opacity: 0,
+                x: index % 2 === 0 ? -100 : 100, // Alternate slide direction
+                duration: 1,
+                ease: "power2.out",
+                scrollTrigger: {
+                    trigger: item,
+                    start: "top 80%",
+                    toggleActions: "play none none none"
+                }
+            });
+            gsap.from(item.previousElementSibling, { // The dot
+                opacity: 0,
+                scale: 0,
+                duration: 0.5,
+                ease: "back.out(2)",
+                scrollTrigger: {
+                    trigger: item,
+                    start: "top 80%",
+                    toggleActions: "play none none none"
+                }
+            }
+            );
+        });
+
+        // 6. Contact Form Submission (Basic client-side feedback)
+        const contactForm = document.getElementById('contactForm');
+        const formMessage = document.getElementById('form-message');
+
+        contactForm.addEventListener('submit', function(event) {
+            event.preventDefault(); // Prevent actual form submission
+
+            // Simulate form submission
+            gsap.to(contactForm, {
+                opacity: 0,
+                y: -20,
+                duration: 0.5,
+                onComplete: () => {
+                    formMessage.textContent = "Message sent successfully! I'll get back to you soon.";
+                    formMessage.classList.remove('hidden');
+                    gsap.fromTo(formMessage,
+                        { opacity: 0, y: 20 },
+                        { opacity: 1, y: 0, duration: 0.5 }
+                    );
+                    contactForm.reset(); // Clear form fields
+                    gsap.to(contactForm, { opacity: 1, y: 0, duration: 0.5, delay: 2 }); // Fade form back in after a delay
+                }
+            });
+        });
+
+        // Update current year in footer
+        document.getElementById('current-year').textContent = new Date().getFullYear();
+
+        // Smooth scroll for navigation links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+
+        // Section heading reveal animation
+        gsap.utils.toArray(".section-heading").forEach(heading => {
+            gsap.from(heading, {
+                opacity: 0,
+                y: 50,
+                duration: 1,
+                ease: "power2.out",
+                scrollTrigger: {
+                    trigger: heading,
+                    start: "top 85%",
+                    toggleActions: "play none none none"
+                }
+            });
+        });
+
+        // --- Animated Circles Logic ---
+        const circlesContainer = document.getElementById('animated-circles-container');
+        const colors = ['#a8c0ff', '#3f2b96', '#c084fc', '#8b5cf6', '#e2e8f0']; // Shades of blue, purple, and white
+        const numCircles = 60; // Increased number of circles
+
+        function createAndAnimateCircle() {
+            const circle = document.createElement('div');
+            circle.classList.add('animated-circle');
+            
+            const size = Math.random() * 80 + 20; // Size between 20px and 100px
+            circle.style.width = `${size}px`;
+            circle.style.height = `${size}px`;
+            circle.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+            
+            // Initial random position within the document's scrollable height
+            const initialX = Math.random() * window.innerWidth;
+            const initialY = Math.random() * document.body.scrollHeight;
+            circle.style.left = `${initialX}px`;
+            circle.style.top = `${initialY}px`;
+
+            circlesContainer.appendChild(circle);
+
+            // Animate to new random positions
+            function animateCircle() {
+                const targetX = Math.random() * window.innerWidth;
+                const targetY = Math.random() * document.body.scrollHeight; // Target position within the document's scrollable height
+                const duration = Math.random() * 1 + 0.5; // Duration between 0.5s and 1.5s (very fast)
+                const delay = Math.random() * 0.5; // Reduced delay for faster overall feel
+
+                gsap.to(circle, {
+                    x: targetX - initialX, // Animate translation relative to initial position
+                    y: targetY - initialY,
+                    opacity: Math.random() * 0.4 + 0.2, // Vary opacity slightly
+                    scale: Math.random() * 0.2 + 0.9, // Vary scale slightly
+                    duration: duration,
+                    ease: "power1.inOut",
+                    repeat: -1, // Loop indefinitely
+                    yoyo: true, // Go back and forth
+                    delay: delay,
+                    onComplete: animateCircle // Re-call to animate to new random position after yoyo completes
+                });
+            }
+
+            animateCircle(); // Start the animation
+        }
+
+        // Function to update the animated circles container height
+        function updateCirclesContainerHeight() {
+            circlesContainer.style.height = `${document.body.scrollHeight}px`;
+        }
+
+        // Create multiple circles on initial load
+        for (let i = 0; i < numCircles; i++) {
+            createAndAnimateCircle();
+        }
+
+        // Update container height on load and resize
+        window.addEventListener('load', updateCirclesContainerHeight);
+        window.addEventListener('resize', updateCirclesContainerHeight);
+
+    </script>
+</body>
+</html>
